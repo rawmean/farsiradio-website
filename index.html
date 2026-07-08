@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarsiRadio — Persian Radio, Anywhere</title>
+    <meta name="description" content="Stream Persian radio stations on your iPhone. Features sleep timer, recording, Persian calendar, and step tracking — all with a beautiful, simple interface.">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/app-icon-180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="images/app-icon-192.png">
+    <style>
+        :root {
+            --bg: #0d0d0f;
+            --surface: #1a1a1f;
+            --surface-hover: #242429;
+            --text: #f5f5f7;
+            --text-secondary: #a1a1aa;
+            --accent: #e44d26;
+            --accent-glow: rgba(228, 77, 38, 0.25);
+            --border: #2a2a30;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Navigation ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(13, 13, 15, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 56px;
+        }
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 1.2rem; color: var(--text); text-decoration: none;
+        }
+        .nav-logo img { width: 34px; height: 34px; border-radius: 8px; }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); }
+
+        /* ── Hero ── */
+        .hero {
+            padding: 140px 24px 100px; text-align: center;
+            background: radial-gradient(ellipse 80% 60% at 50% -20%, var(--accent-glow), transparent 70%);
+        }
+        .hero-icon { width: 100px; height: 100px; border-radius: 22px; margin-bottom: 28px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 60px var(--accent-glow); }
+        .hero h1 { font-size: 3.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+        .hero h1 span { color: var(--accent); }
+        .hero .tagline { font-size: 1.25rem; color: var(--text-secondary); max-width: 500px; margin: 0 auto 40px; }
+        .btn-appstore { display: inline-block; transition: transform 0.2s, filter 0.2s; }
+        .btn-appstore:hover { transform: scale(1.04); filter: brightness(1.15); }
+        .btn-appstore img { height: 52px; }
+
+        /* ── Sections ── */
+        section { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+        .section-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em;
+            color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+        .section-title { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 40px; }
+
+        /* ── Features ── */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .feature-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 32px 28px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .feature-card:hover { background: var(--surface-hover); transform: translateY(-2px); }
+        .feature-card .icon { font-size: 2rem; margin-bottom: 16px; }
+        .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+        .feature-card p { font-size: 0.95rem; color: var(--text-secondary); }
+
+        /* ── Privacy ── */
+        .privacy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .privacy-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px 24px;
+        }
+        .privacy-card .shield { font-size: 1.6rem; margin-bottom: 12px; }
+        .privacy-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+        .privacy-card p { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* ── Support ── */
+        .support-box {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 40px 32px; text-align: center;
+        }
+        .support-box p { color: var(--text-secondary); margin-bottom: 24px; font-size: 1.05rem; }
+        .btn-email {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--accent); color: #fff; text-decoration: none;
+            padding: 14px 32px; border-radius: 999px;
+            font-weight: 600; font-size: 1rem;
+            transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-email:hover { background: #f05a38; transform: translateY(-1px);
+            box-shadow: 0 8px 28px var(--accent-glow); }
+        .btn-email svg { width: 20px; height: 20px; }
+
+        /* ── Footer ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 24px; text-align: center;
+            font-size: 0.85rem; color: var(--text-secondary);
+        }
+        footer a { color: var(--text-secondary); text-decoration: underline; }
+        footer a:hover { color: var(--text); }
+        footer .links { margin-bottom: 12px; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero { padding: 110px 20px 60px; }
+            section { padding: 50px 20px; }
+            .section-title { font-size: 1.7rem; }
+            .nav-links { gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <img src="images/app-icon-180.png" alt="FarsiRadio icon"> FarsiRadio
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#privacy">Privacy</a></li>
+            <li><a href="#support">Support</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+    <img src="images/app-icon-180.png" alt="FarsiRadio" class="hero-icon">
+    <h1>Persian Radio, <span>Anywhere</span></h1>
+    <p class="tagline">Stream the best Persian radio stations live on your iPhone &mdash; free, simple, and beautiful.</p>
+    <a class="btn-appstore"
+       href="https://apps.apple.com/app/farsi-radio/id395131951"
+       target="_blank" rel="noopener"
+       aria-label="Download FarsiRadio on the App Store">
+        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+             alt="Download on the App Store">
+    </a>
+</header>
+
+<!-- Features -->
+<section id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need in a radio app.</h2>
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <div class="icon">📻</div>
+            <h3>Live Persian Stations</h3>
+            <p>Stream dozens of Persian radio stations with a single tap. Curated station list updated automatically, so you always have the best selection.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon">⏱️</div>
+            <h3>Sleep Timer</h3>
+            <p>Set a sleep timer and drift off to your favorite station. The radio stops automatically so you don't have to worry about it.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon">⏺️</div>
+            <h3>Record &amp; Save</h3>
+            <p>Record live audio directly to your device as MP3 files. Capture songs, shows, or moments you want to keep forever.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon">📅</div>
+            <h3>Persian Calendar</h3>
+            <p>Stay connected to the Persian calendar right inside the app. Beautiful SwiftUI calendar view with full date navigation.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon">🚶</div>
+            <h3>Step Tracking</h3>
+            <p>Track your steps and floors climbed — today and yesterday — while listening. A built-in pedometer keeps you moving.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="icon">🎵</div>
+            <h3>Now Playing &amp; YouTube</h3>
+            <p>See what's playing with rich Lock Screen and Control Center integration. Tap to find the current track on YouTube right inside the app.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- Privacy -->
+<section id="privacy">
+    <div class="section-label">Privacy</div>
+    <h2 class="section-title">Your data stays on your device.</h2>
+    <div class="privacy-grid">
+
+        <div class="privacy-card">
+            <div class="shield">🔒</div>
+            <h3>Local Processing</h3>
+            <p>All audio streaming, recording, and step tracking data is processed entirely on your device. Nothing is uploaded to external servers.</p>
+        </div>
+
+        <div class="privacy-card">
+            <div class="shield">🛡️</div>
+            <h3>No Data Sharing</h3>
+            <p>We never collect, store, or share your personal information with third parties. Your listening habits and recordings are yours alone.</p>
+        </div>
+
+        <div class="privacy-card">
+            <div class="shield">📋</div>
+            <h3>Transparent Ads</h3>
+            <p>The app displays Google AdMob ads. You can manage your ad privacy preferences at any time in Settings, including opting out of personalized ads.</p>
+        </div>
+
+        <div class="privacy-card">
+            <div class="shield">📄</div>
+            <h3>Full Privacy Policy</h3>
+            <p>Read the complete privacy policy for details on how any limited data is handled.<br>
+            <a href="https://www.maadotaa.com/radio-privacy" target="_blank" rel="noopener" style="color:var(--accent);">View Privacy Policy →</a></p>
+        </div>
+
+    </div>
+</section>
+
+<!-- Support -->
+<section id="support">
+    <div class="section-label">Support</div>
+    <h2 class="section-title">Need help? We're here.</h2>
+    <div class="support-box">
+        <p>If you have questions, run into an issue, or just want to share feedback,<br>send us an email and we'll get back to you as soon as possible.</p>
+        <a class="btn-email" href="mailto:apps@maadotaa.com?subject=need%20help%20with%20FarsiRadio">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Email Support
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="links">
+        <a href="#privacy">Privacy</a>
+        <a href="#support">Support</a>
+        <a href="https://apps.apple.com/app/farsi-radio/id395131951" target="_blank" rel="noopener">App Store</a>
+    </div>
+    <p>&copy; 2025 Ramin Rezaiifar. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
